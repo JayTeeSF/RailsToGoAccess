@@ -31,11 +31,11 @@ class LogConverter
   def to_weblog
     File.open(@output_log, "w") do |output_log|
       weblog_data do |weblog_line|
-        # log-format %h %^[%d:%t %^] "%r" %s %b "%R" "%u" %L
+        # log-format %h %^[%d:%t %^] "%r" %s %b "%R" "%u" %T
         # 172.31.32.196 - - [26/Jan/2017:03:10:03 +0000] "GET /path/path?_=148545390 HTTP/1.1" 200 2511 "https://www.somesite.com/referrer" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:50.0) Gecko/20100101 Firefox/50.0" "-"
         t = Time.parse(weblog_line["RequestStartTime"])
         log_time = t.to_datetime_in_timezone(DEFAULT_TIMEZONE)
-        output_log.puts %Q|#{weblog_line["Host"]} - - [#{log_time}] "#{weblog_line["RequestMethod"]} #{weblog_line["RequestPath"]} HTTP/1.1" #{weblog_line["CompletionCode"]} - "#{weblog_line["Referrer"] || '-'}" "#{weblog_line["UserAgent"]}" #{weblog_line["CompletionMS"]}|
+        output_log.puts %Q|#{weblog_line["Host"]} - - [#{log_time}] "#{weblog_line["RequestMethod"]} #{weblog_line["RequestPath"]} HTTP/1.1" #{weblog_line["CompletionCode"]} - "#{weblog_line["Referrer"] || '-'}" "#{weblog_line["UserAgent"]}" "#{weblog_line["CompletionSeconds"]}"|
       end
     end
   end
@@ -101,6 +101,7 @@ class LogConverter
                 weblog_line["CompletionCode"] = code
                 weblog_line["CompletionStatus"] = status
                 weblog_line["CompletionMS"] = total_ms
+                weblog_line["CompletionSeconds"] = Float(total_ms) / 1000
                 weblog_line["CompletionTimeDetail"] = time_details
                 completed = true
               end

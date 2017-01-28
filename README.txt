@@ -5,8 +5,8 @@ And update it's config file w/ an appropriate log-format line (see below)
 
 Then:
 Run your logs (possibly many of them at once* via a 'glob': unix wildcard) through this script, in order to make a slightly
-extended NCSA Combiled Log Format, specifically append %L ...and I don't actually have %b (bytes) in my rails log.
-log-format %h %^[%d:%t %^] "%r" %s %b "%R" "%u" %L
+extended NCSA Combiled Log Format, specifically append "%T" ...unfortunately we don't actually have %b (bytes sent) from the rails log.
+log-format %h %^[%d:%t %^] "%r" %s %b "%R" "%u" "%T"
 
 
 *Note: I have my servers upload hourly logs to S3 w/ UTC times 
